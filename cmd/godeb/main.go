@@ -5,8 +5,7 @@
 // For details of how this tool works and context for why it was built,
 // please refer to the following blog post:
 //
-//   http://blog.labix.org/2013/06/15/in-flight-deb-packages-of-go
-//
+//	http://blog.labix.org/2013/06/15/in-flight-deb-packages-of-go
 package main
 
 import (
@@ -79,7 +78,6 @@ func run() error {
 	default:
 		return fmt.Errorf("unknown command: %s", os.Args[1])
 	}
-	return nil
 }
 
 func listCommand() error {
