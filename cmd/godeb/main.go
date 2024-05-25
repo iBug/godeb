@@ -31,6 +31,8 @@ func main() {
 		GOARCH = "armv6l"
 	}
 
+	listCmd.Flags().BoolVarP(&includeAll, "all", "a", false, "Include all versions")
+
 	rootCmd.AddCommand(listCmd, downloadCmd, installCmd, removeCmd)
 	rootCmd.SetHelpCommand(&cobra.Command{Hidden: true})
 	rootCmd.Execute()
@@ -47,12 +49,14 @@ var rootCmd = &cobra.Command{
 	CompletionOptions: cobra.CompletionOptions{DisableDefaultCmd: true},
 }
 
+var includeAll bool
+
 var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List available Go versions",
 	Args:  cobra.NoArgs,
 	RunE: func(_ *cobra.Command, _ []string) error {
-		tbs, err := tarballs()
+		tbs, err := tarballs(includeAll)
 		if err != nil {
 			return err
 		}
@@ -109,7 +113,7 @@ var installCmd = &cobra.Command{
 }
 
 func actionCommand(version string, install bool) error {
-	tbs, err := tarballs()
+	tbs, err := tarballs(true)
 	if err != nil {
 		return err
 	}
@@ -193,8 +197,11 @@ type GolangDlVersion struct {
 }
 
 // REST API described in https://github.com/golang/website/blob/master/internal/dl/dl.go
-func tarballs() ([]*Tarball, error) {
-	url := "https://golang.org/dl/?mode=json&include=all"
+func tarballs(includeAll bool) ([]*Tarball, error) {
+	url := "https://golang.org/dl/?mode=json"
+	if includeAll {
+		url += "&include=all"
+	}
 	downloadBaseURL := "https://dl.google.com/go/"
 
 	resp, err := http.Get(url)
@@ -212,10 +219,10 @@ func tarballs() ([]*Tarball, error) {
 	for _, v := range versions {
 		for _, f := range v.Files {
 			if f.Os == GOOS && f.Arch == GOARCH {
-				t := Tarball{
+				tbs = append(tbs, &Tarball{
 					Version: strings.TrimPrefix(f.Version, "go"),
-					URL:     downloadBaseURL + f.Filename}
-				tbs = append(tbs, &t)
+					URL:     downloadBaseURL + f.Filename,
+				})
 				break
 			}
 		}
