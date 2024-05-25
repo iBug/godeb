@@ -31,14 +31,13 @@ Available commands:
 
 var (
 	GOARCH = build.Default.GOARCH
-	GOOS = build.Default.GOOS
+	GOOS   = build.Default.GOOS
 )
 
 func main() {
 	if GOARCH == "arm" {
 		GOARCH = "armv6l"
 	}
-
 
 	if err := run(); err != nil {
 		fmt.Fprintln(os.Stderr, "error:", err)
@@ -112,8 +111,8 @@ func actionCommand(version string, install bool) error {
 	}
 	var url string
 	if version == "" {
-		version = tbs[len(tbs)-1].Version
-		url = tbs[len(tbs)-1].URL
+		version = tbs[0].Version
+		url = tbs[0].URL
 	} else {
 		for _, tb := range tbs {
 			if version == tb.Version {
@@ -218,6 +217,6 @@ func tarballs() ([]*Tarball, error) {
 		}
 	}
 
-	sort.Sort(sort.Reverse(tarballSlice(tbs)))
+	sort.Sort(tarballSlice(tbs))
 	return tbs, nil
 }
