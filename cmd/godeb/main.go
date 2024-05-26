@@ -198,7 +198,7 @@ type GolangDlVersion struct {
 
 // REST API described in https://github.com/golang/website/blob/master/internal/dl/dl.go
 func tarballs(includeAll bool) ([]*Tarball, error) {
-	url := "https://golang.org/dl/?mode=json"
+	url := "https://go.dev/dl/?mode=json"
 	if includeAll {
 		url += "&include=all"
 	}

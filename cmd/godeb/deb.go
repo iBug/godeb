@@ -8,13 +8,14 @@ import (
 	"compress/gzip"
 	"crypto/md5"
 	"fmt"
-	"github.com/blakesmith/ar"
 	"go/build"
 	"io"
 	"os"
 	"os/exec"
 	"strings"
 	"time"
+
+	"github.com/blakesmith/ar"
 )
 
 func createDeb(version string, tarball io.Reader, deb io.Writer) error {
@@ -55,7 +56,7 @@ Replaces: golang-go
 Provides: golang-go
 Section: devel
 Priority: extra
-Homepage: http://golang.org
+Homepage: https://go.dev
 Description: Go language compiler and tools (gc)
  The Go programming language is an open source project to make programmers
  more productive. Go is expressive, concise, clean, and efficient.
